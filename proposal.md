@@ -8,7 +8,7 @@ I am going to make a platformer game loosely based on the magic system in a book
 - Colision with walls and death blocks(spikes or lava)
 - The ability to push and pull your self from/to the metal blocks
 - level editor
-- tutorial levels and normal levels
+- single level
 - music and sound effects
 
 ## Nice to have list
@@ -20,3 +20,4 @@ I am going to make a platformer game loosely based on the magic system in a book
 - more powers
 - different worlds (world 1-1 would be level 1 world 2-1 would be the second world but still first level)
 - dialogue
+- tutorial levels and normal levels

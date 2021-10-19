@@ -15,9 +15,10 @@ let dy = 1;
 let airtime = false;
 let flooring;
 let pushingLine;
-let startGame = false;
+let startGame = true;
 let levelEditor = false;
 let d;
+let pushSpeed = 3;
 
 function preload() {
   player = loadImage("assets/Old hero1.png"); //load player image
@@ -64,18 +65,15 @@ function draw() {
   createPushingLine();
   //
   editor();
+  //
 }
 function createPushingLine() {
   if (startGame === true) {
     translate(width * 0.45 - 25, rectY + 5);
     pushingLine = atan2(playerY-(rectY + 5) + radius, playerX-(width * 0.45 - 25) + radius);
     rotate(pushingLine);
-    //fill(0,180,220, 100);
-    //rect(0, 0, width * 0.45 -25 + 100 - radius, 10);
-    stroke ("blue");
+    stroke (0,123,255, 240);
     line(0, 0, d, 0);
-    console.log(d);
-    // console.log(0, 0, -playerX, -playerY);
   }
 }
 
@@ -134,6 +132,21 @@ function makeStartingScreen() {
       text("LEVEL EDITOR", width/2 - 150, height*0.75 + 30, 500, 130);
     }
   }
+}
+
+function mousePressed() {
+  if (mouseX >= width * 0.45 - 50 && mouseX <= width * 0.45) {
+    if (mouseY >= rectY && mouseY <= 10) {
+      pushPull;
+      console.log(6);
+    }
+  }
+}
+
+function pushPull() {
+  playerX += cos(pushingLine) * pushSpeed;
+  playerY += sin(pushingLine) * pushSpeed;
+  console.log(1);
 }
 
 function mouseClicked() {
