@@ -18,7 +18,7 @@ let pushingLine;
 let startGame = true;
 let levelEditor = false;
 let d;
-let pushSpeed = 3;
+let pushSpeed = 5;
 
 function preload() {
   player = loadImage("assets/Old hero1.png"); //load player image
@@ -66,6 +66,22 @@ function draw() {
   //
   editor();
   //
+  if (mouseIsPressed === true) {
+    if (mouseButton === LEFT) {
+      if (mouseX >= width * 0.45 - 50 && mouseX <= width * 0.45) {
+        if (mouseY >= rectY && mouseY <= rectY + 10) {
+          steelPush();
+        }
+      }
+    }
+    else if (mouseButton === RIGHT) {
+      if (mouseX >= width * 0.45 - 50 && mouseX <= width * 0.45) {
+        if (mouseY >= rectY && mouseY <= rectY + 10) {
+          ironPull();
+        }
+      }
+    }
+  }
 }
 function createPushingLine() {
   if (startGame === true) {
@@ -134,19 +150,14 @@ function makeStartingScreen() {
   }
 }
 
-function mousePressed() {
-  if (mouseX >= width * 0.45 - 50 && mouseX <= width * 0.45) {
-    if (mouseY >= rectY && mouseY <= 10) {
-      pushPull;
-      console.log(6);
-    }
-  }
-}
-
-function pushPull() {
+function steelPush() {
   playerX += cos(pushingLine) * pushSpeed;
   playerY += sin(pushingLine) * pushSpeed;
-  console.log(1);
+}
+
+function ironPull() {
+  playerX -= cos(pushingLine) * pushSpeed;
+  playerY -= sin(pushingLine) * pushSpeed;
 }
 
 function mouseClicked() {
@@ -158,9 +169,11 @@ function mouseClicked() {
     }
   }
   if (levelEditor === false) {
-    if (mouseX >= width/2 - 250 && mouseX <= width/2 + 250) {
-      if (mouseY >= height*0.75 - 10 && mouseY <= height*0.75 + 120) {
-        levelEditor = true;
+    if (startGame === false) {
+      if (mouseX >= width/2 - 250 && mouseX <= width/2 + 250) {
+        if (mouseY >= height*0.75 - 10 && mouseY <= height*0.75 + 120) {
+          levelEditor = true;
+        }
       }
     }
   }
