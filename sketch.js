@@ -19,13 +19,15 @@ let startGame = true;
 let levelEditor = false;
 let d;
 let pushSpeed = 5;
+let level1;
 
 function preload() {
   player = loadImage("assets/Old hero1.png"); //load player image
+  level1 = loadJSON("starting-level.json");
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(1599,788);
   rectY = height * 0.9;
   rectH = height * 0.1;
   flooring = rectY;
@@ -37,30 +39,31 @@ let topOfWallhit = false;
 let rightwallhit = false;
 
 function draw() {
-  background(156, 140, 132);//156, 140, 132
+  background(156, 140, 132);
   makeStartingScreen();
   //
   d = dist(width * 0.45 - 25, rectY + 5, playerX + radius, playerY + radius);
   //
-  drawFloor();
+  setupLevel();
   //
-  drawWall();
+  drawBlock();
+  //
+  drawMetal();
   //
   handleKeys(); //player movement
   //
   drawPlayer();
   //
-  floorhitbox();
+  //floorhitbox();
   //
-  leftwallhitbox();
+  //leftwallhitbox();
   //
-  topOfWallhitbox();
+  //topOfWallhitbox();
   //
-  rightwallhitbox();
+  //rightwallhitbox();
   //
-  gravity();
+  //gravity();
   //
-  drawMetal();
   //
   createPushingLine();
   //
@@ -90,13 +93,6 @@ function createPushingLine() {
     rotate(pushingLine);
     stroke (0,123,255, 240);
     line(0, 0, d, 0);
-  }
-}
-
-function drawMetal() {
-  if (startGame === true) {
-    fill(255);
-    rect(width * 0.45 - 50, rectY, 50, 10);
   }
 }
 
@@ -176,6 +172,23 @@ function mouseClicked() {
         }
       }
     }
+  }
+}
+
+function setupLevel() {
+  if (startGame === true) {
+    for (let i=0; i <= 1599; i++) {
+      for (let j=0; j <= 788; j++) {
+        
+      }
+    }
+  }
+}
+
+function drawMetal() {
+  if (startGame === true) {
+    fill(255);
+    rect(width * 0.45 - 50, rectY, 50, 10);
   }
 }
 
