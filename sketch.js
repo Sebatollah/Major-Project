@@ -25,6 +25,8 @@ let cols = 16;
 let cellwidth;
 let cellHeight;
 let grid;
+let playerCellY;
+let playerCellX;
 
 function preload() {
   player = loadImage("assets/Old hero1.png"); //load player image
@@ -54,6 +56,9 @@ function draw() {
   //
   d = dist(width * 0.45 - 25, rectY + 5, playerX + radius, playerY + radius);
   //
+  let playerCellX = Math.floor(playerX/cellwidth);
+  let playerCellY = Math.floor(playerY/cellHeight);
+  //
   //drawMetal();
   //
   handleKeys(); //player movement
@@ -74,6 +79,9 @@ function draw() {
   //createPushingLine();
   //
   editor();
+  //
+  console.log(playerCellY, playerCellX);
+  //console.log(playerY, playerX);
   //
   if (mouseIsPressed === true) {
     if (mouseButton === LEFT) {
@@ -112,11 +120,19 @@ function displayGrid() {
         fill(156, 140, 132);
         stroke(156, 140, 132);
         rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+        if (playerCellY === grid[y] && playerCellX === grid[x]) {
+          floorhit = false;
+          console.log("cell0");
+        }
       }
       else if (grid[y][x] === 1) {//block
         fill(200);
         stroke(200);
         rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+        if (playerCellY === grid[y] && playerCellX === grid[x]) {
+          floorhit = true;
+          console.log("cell1");
+        }
       }
       else if (grid[y][x] === 2) {//metal
         fill(255);
@@ -287,18 +303,16 @@ function topOfWallhitbox() {
 function handleKeys() { //allows movement
   if (keyIsDown(87)) {
   //w
-    if (playerY > 0) {
+    //if (playerY > 0) {
       playerY -= speed;
-    }
+    //}
   }
 
   if (keyIsDown(83)) {
   //s
-    // if (floorhit === false) {
-    //   if (topOfWallhit === false) {
-        playerY += speed;
-    //   }
-    // }
+    if (floorhit === false) {
+      playerY += speed;
+    }
   }
   if (keyIsDown(65)) {
     //a
