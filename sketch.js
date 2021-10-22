@@ -4,8 +4,8 @@
 
 let player;
 let metal;
-let playerX = 0;
-let playerY = 0;
+let playerX;
+let playerY;
 let rectY;
 let rectH;
 let radius = 25;
@@ -20,10 +20,15 @@ let levelEditor = false;
 let d;
 let pushSpeed = 5;
 let level1;
+let rows = 21;
+let cols = 16;
+let cellwidth;
+let cellHeight;
+let grid;
 
 function preload() {
   player = loadImage("assets/Old hero1.png"); //load player image
-  level1 = loadJSON("starting-level.json");
+  level1 = loadJSON("assets/starting-level.json");
 }
 
 function setup() {
@@ -31,6 +36,9 @@ function setup() {
   rectY = height * 0.9;
   rectH = height * 0.1;
   flooring = rectY;
+  grid = level1;
+  cellwidth = width / rows;
+  cellHeight = height / cols;
 }
 
 let floorhit = false;
@@ -42,13 +50,11 @@ function draw() {
   background(156, 140, 132);
   makeStartingScreen();
   //
+  displayGrid();
+  //
   d = dist(width * 0.45 - 25, rectY + 5, playerX + radius, playerY + radius);
   //
-  setupLevel();
-  //
-  drawBlock();
-  //
-  drawMetal();
+  //drawMetal();
   //
   handleKeys(); //player movement
   //
@@ -65,7 +71,7 @@ function draw() {
   //gravity();
   //
   //
-  createPushingLine();
+  //createPushingLine();
   //
   editor();
   //
@@ -85,14 +91,52 @@ function draw() {
       }
     }
   }
+  //
 }
 function createPushingLine() {
   if (startGame === true) {
+    push();
     translate(width * 0.45 - 25, rectY + 5);
     pushingLine = atan2(playerY-(rectY + 5) + radius, playerX-(width * 0.45 - 25) + radius);
     rotate(pushingLine);
     stroke (0,123,255, 240);
     line(0, 0, d, 0);
+    pop();
+  }
+}
+
+function displayGrid() {
+  for (let y=0; y<cols; y++) {
+    for (let x=0; x<rows; x++) {
+      if (grid[y][x] === 0) {//empty space
+        fill(156, 140, 132);
+        stroke(156, 140, 132);
+        rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+      }
+      else if (grid[y][x] === 1) {//block
+        fill(200);
+        stroke(200);
+        rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+      }
+      else if (grid[y][x] === 2) {//metal
+        fill(255);
+        stroke(255);
+        rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+      }
+      else if (grid[y][x] === 3) {//starting point
+        playerX = x*cellwidth;
+        playerY = y*cellHeight;
+        fill(156, 140, 132);
+        stroke(156, 140, 132);
+        rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+        grid[y][x] = 0;
+      }
+      else if (grid[y][x] === 4) {//finish line
+        fill(0);
+        stroke(0);
+        rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+      }
+    }
   }
 }
 
@@ -175,36 +219,10 @@ function mouseClicked() {
   }
 }
 
-function setupLevel() {
-  if (startGame === true) {
-    for (let i=0; i <= 1599; i++) {
-      for (let j=0; j <= 788; j++) {
-        
-      }
-    }
-  }
-}
-
 function drawMetal() {
   if (startGame === true) {
     fill(255);
     rect(width * 0.45 - 50, rectY, 50, 10);
-  }
-}
-
-function drawFloor() {
-  if (startGame === true) {
-    noStroke();
-    fill(200);
-    rect(0, rectY, width, height * 0.1);
-  }
-}
-
-function drawWall() {
-  if (startGame === true) {
-    noStroke();
-    fill(200);
-    rect(width * 0.45, rectY - 200, 50, 200);
   }
 }
 
@@ -276,27 +294,27 @@ function handleKeys() { //allows movement
 
   if (keyIsDown(83)) {
   //s
-    if (floorhit === false) {
-      if (topOfWallhit === false) {
+    // if (floorhit === false) {
+    //   if (topOfWallhit === false) {
         playerY += speed;
-      }
-    }
+    //   }
+    // }
   }
   if (keyIsDown(65)) {
     //a
-    if (playerX > 0) {
-      if (leftwallhit === false) {
+    // if (playerX > 0) {
+    //   if (leftwallhit === false) {
         playerX -= speed;
-      }
-    }
+    //   }
+    // }
   }
   if (keyIsDown(68)) {
     //d
-    if (playerX + radius*2 < width) {
-      if (rightwallhit === false) {
+    // if (playerX + radius*2 < width) {
+    //   if (rightwallhit === false) {
         playerX += speed;
-      }
-    }
+    //   }
+    // }
   }
 }
 
