@@ -65,7 +65,7 @@ function draw() {
   //
   drawPlayer();
   //
-  //floorhitbox();
+  floorhitbox();
   //
   //leftwallhitbox();
   //
@@ -120,10 +120,6 @@ function displayGrid() {
         fill(156, 140, 132);
         stroke(156, 140, 132);
         rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
-        if (playerCellY === grid[y] && playerCellX === grid[x]) {
-          floorhit = false;
-          console.log("cell0");
-        }
       }
       else if (grid[y][x] === 1) {//block
         fill(200);
@@ -249,16 +245,9 @@ function drawPlayer() {
 }
 
 function floorhitbox() { //whenever the player touches the hitbox it activates anything to do with the hitbox
-  floorhit = collideRectRect(
-    0,
-    rectY,
-    width,
-    height * 0.1,
-    playerX,
-    playerY,
-    radius * 2,
-    radius * 2
-  );
+  if (grid.playerCellY+1 === 1) {
+    floorhit = true;
+  }
 }
 
 function leftwallhitbox() {
