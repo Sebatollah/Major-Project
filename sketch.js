@@ -27,10 +27,18 @@ let cellHeight;
 let grid;
 let playerCellY;
 let playerCellX;
+let idle1;
+let idle2;
+let idle3;
+let idletime = 5000;
+let isIdle = false;
 
 function preload() {
   player = loadImage("assets/Old hero1.png"); //load player image
   level1 = loadJSON("assets/starting-level.json");
+  idle1 = loadImage("assets/old-hero-idle2.png");
+  idle2 = loadImage("assets/old-hero-idle3.png");
+  idle3 = loadImage("assets/old-hero-idle4.png");
 }
 
 function setup() {
@@ -75,12 +83,11 @@ function draw() {
   //
   //gravity();
   //
-  //
   //createPushingLine();
   //
   editor();
   //
-  console.log(playerCellY, playerCellX);
+  console.log(grid[playerCellY][playerCellX]);
   //console.log(playerY, playerX);
   //
   if (mouseIsPressed === true) {
@@ -114,39 +121,41 @@ function createPushingLine() {
 }
 
 function displayGrid() {
-  for (let y=0; y<cols; y++) {
-    for (let x=0; x<rows; x++) {
-      if (grid[y][x] === 0) {//empty space
-        fill(156, 140, 132);
-        stroke(156, 140, 132);
-        rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
-      }
-      else if (grid[y][x] === 1) {//block
-        fill(200);
-        stroke(200);
-        rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
-        if (playerCellY === grid[y] && playerCellX === grid[x]) {
-          floorhit = true;
-          console.log("cell1");
+  if (startGame === true) {
+    for (let y=0; y<cols; y++) {
+      for (let x=0; x<rows; x++) {
+        if (grid[y][x] === 0) {//empty space
+          fill(156, 140, 132);
+          stroke(156, 140, 132);
+          rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
         }
-      }
-      else if (grid[y][x] === 2) {//metal
-        fill(255);
-        stroke(255);
-        rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
-      }
-      else if (grid[y][x] === 3) {//starting point
-        playerX = x*cellwidth;
-        playerY = y*cellHeight;
-        fill(156, 140, 132);
-        stroke(156, 140, 132);
-        rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
-        grid[y][x] = 0;
-      }
-      else if (grid[y][x] === 4) {//finish line
-        fill(0);
-        stroke(0);
-        rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+        else if (grid[y][x] === 1) {//block
+          fill(200);
+          stroke(200);
+          rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+          if (playerCellY === grid[y] && playerCellX === grid[x]) {
+            floorhit = true;
+            console.log("cell1");
+          }
+        }
+        else if (grid[y][x] === 2) {//metal
+          fill(255);
+          stroke(255);
+          rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+        }
+        else if (grid[y][x] === 3) {//starting point
+          playerX = x*cellwidth;
+          playerY = y*cellHeight;
+          fill(156, 140, 132);
+          stroke(156, 140, 132);
+          rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+          grid[y][x] = 0;
+        }
+        else if (grid[y][x] === 4) {//finish line
+          fill(0);
+          stroke(0);
+          rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+        }
       }
     }
   }
@@ -240,13 +249,19 @@ function drawMetal() {
 
 function drawPlayer() {
   if (startGame === true) {
-    image(player, playerX, playerY, radius * 2, radius * 2);
+    if (isIdle === false) {
+      image(player, playerX, playerY, radius * 2, radius * 2);
+    }
+    if (isIdle === true) {
+      image(player, playerX, playerY, radius * 2, radius * 2);
+    }
   }
 }
 
-function floorhitbox() { //whenever the player touches the hitbox it activates anything to do with the hitbox
-  if (grid.playerCellY+1 === 1) {
+function floorhitbox() {
+  if (grid[playerCellY][playerCellX] === 1) {
     floorhit = true;
+    console.log(floorhit);
   }
 }
 

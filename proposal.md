@@ -21,3 +21,4 @@ I am going to make a platformer game loosely based on the magic system in a book
 - different worlds (world 1-1 would be level 1 world 2-1 would be the second world but still first level)
 - dialogue
 - tutorial levels and normal levels
+- animation(like idle animations and running animations etc)
