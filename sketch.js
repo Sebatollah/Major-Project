@@ -25,8 +25,10 @@ let cols = 16;
 let cellwidth;
 let cellHeight;
 let grid;
-let playerCellY;
-let playerCellX;
+let playerCellYU;
+let playerCellXL;
+let playerCellYD;
+let playerCellXR;
 let idle1;
 let idle2;
 let idle3;
@@ -53,7 +55,7 @@ function setup() {
 
 let floorhit = false;
 let leftwallhit = false;
-let topOfWallhit = false;
+let roofhit = false;
 let rightwallhit = false;
 
 function draw() {
@@ -64,8 +66,10 @@ function draw() {
   //
   d = dist(width * 0.45 - 25, rectY + 5, playerX + radius, playerY + radius);
   //
-  let playerCellX = Math.floor(playerX/cellwidth);
-  let playerCellY = Math.floor(playerY/cellHeight);
+  playerCellXL = Math.floor(playerX/cellwidth);
+  playerCellYU = Math.floor(playerY/cellHeight);
+  playerCellXR = Math.floor((playerX+radius*2)/cellwidth);
+  playerCellYD = Math.floor((playerY+radius*2)/cellHeight);
   //
   //drawMetal();
   //
@@ -75,11 +79,11 @@ function draw() {
   //
   floorhitbox();
   //
-  //leftwallhitbox();
+  leftwallhitbox();
   //
-  //topOfWallhitbox();
+  roofhitbox();
   //
-  //rightwallhitbox();
+  rightwallhitbox();
   //
   //gravity();
   //
@@ -87,7 +91,7 @@ function draw() {
   //
   editor();
   //
-  console.log(grid[playerCellY][playerCellX]);
+  //console.log(playerCellY,playerCellX, grid[playerCellY][playerCellX]);
   //console.log(playerY, playerX);
   //
   if (mouseIsPressed === true) {
@@ -133,10 +137,6 @@ function displayGrid() {
           fill(200);
           stroke(200);
           rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
-          if (playerCellY === grid[y] && playerCellX === grid[x]) {
-            floorhit = true;
-            console.log("cell1");
-          }
         }
         else if (grid[y][x] === 2) {//metal
           fill(255);
@@ -145,7 +145,7 @@ function displayGrid() {
         }
         else if (grid[y][x] === 3) {//starting point
           playerX = x*cellwidth;
-          playerY = y*cellHeight;
+          playerY = y*cellHeight - 10;
           fill(156, 140, 132);
           stroke(156, 140, 132);
           rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
@@ -259,57 +259,64 @@ function drawPlayer() {
 }
 
 function floorhitbox() {
-  if (grid[playerCellY][playerCellX] === 1) {
-    floorhit = true;
-    console.log(floorhit);
+  if (playerCellYD >= 0 && playerCellYD <= cols) {
+    if (playerCellXL >= 0 && playerCellXL <= rows || playerCellXR >= 0 && playerCellXR <= rows) {
+      if (grid[playerCellYD][playerCellXL] === 1 || grid[playerCellYD][playerCellXR] === 1) {
+        floorhit = true;
+      }
+      else {
+        floorhit = false;
+      }
+    }
   }
 }
 
 function leftwallhitbox() {
-  leftwallhit = collideRectRect(
-    width * 0.45 + 50,
-    rectY - 199,
-    1,
-    200,
-    playerX,
-    playerY,
-    radius * 2,
-    radius * 2
-  );
+  if (playerCellYD >= 0 && playerCellYD <= cols || playerCellYU >= 0 && playerCellYU <= cols) {
+    if (playerCellXL >= 0 && playerCellXL <= rows) {
+      if (grid[playerCellYD][playerCellXL] === 1 || grid[playerCellYU][playerCellXL] === 1) {
+        leftwallhit = true;
+      }
+      else {
+        leftwallhit = false;
+      }
+    }
+  }
 }
 
 function rightwallhitbox() {
-  rightwallhit = collideRectRect(
-    width * 0.45,
-    rectY - 199,
-    1,
-    200,
-    playerX,
-    playerY,
-    radius * 2,
-    radius * 2
-  );
+  if (playerCellYD >= 0 && playerCellYD <= cols || playerCellYU >= 0 && playerCellYU <= cols) {
+    if (playerCellXR >= 0 && playerCellXR <= rows) {
+      if (grid[playerCellYD][playerCellXR] === 1 || grid[playerCellYU][playerCellXR] === 1) {
+        rightwallhit = true;
+      }
+      else {
+        rightwallhit = false;
+      }
+    }
+  }
 }
 
-function topOfWallhitbox() {
-  topOfWallhit = collideRectRect(
-    width * 0.45,
-    rectY - 200,
-    50,
-    1,
-    playerX,
-    playerY + radius * 2,
-    radius * 2,
-    1
-  );
+function roofhitbox() {
+  if (playerCellYU >= 0 && playerCellYU <= cols) {
+    if (playerCellXL >= 0 && playerCellXL <= rows || playerCellXR >= 0 && playerCellXR <= rows) {
+      if (grid[playerCellYU][playerCellXL] === 1 || grid[playerCellYU][playerCellXR] === 1) {
+        roofhit = true;
+      }
+      else {
+        roofhit = false;
+      }
+    }
+  }
 }
 
 function handleKeys() { //allows movement
   if (keyIsDown(87)) {
   //w
-    //if (playerY > 0) {
+    if (roofhit === false) {
+      if (playerY -= speed !== )
       playerY -= speed;
-    //}
+    }
   }
 
   if (keyIsDown(83)) {
@@ -320,19 +327,19 @@ function handleKeys() { //allows movement
   }
   if (keyIsDown(65)) {
     //a
-    // if (playerX > 0) {
-    //   if (leftwallhit === false) {
+    if (playerX > 0) {
+      if (leftwallhit === false) {
         playerX -= speed;
-    //   }
-    // }
+      }
+    }
   }
   if (keyIsDown(68)) {
     //d
-    // if (playerX + radius*2 < width) {
-    //   if (rightwallhit === false) {
+    if (playerX + radius*2 < width) {
+      if (rightwallhit === false) {
         playerX += speed;
-    //   }
-    // }
+      }
+    }
   }
 }
 
