@@ -66,10 +66,10 @@ function draw() {
   //
   d = dist(width * 0.45 - 25, rectY + 5, playerX + radius, playerY + radius);
   //
-  playerCellXL = Math.floor(playerX/cellwidth);
-  playerCellYU = Math.floor(playerY/cellHeight);
-  playerCellXR = Math.floor((playerX+radius*2)/cellwidth);
-  playerCellYD = Math.floor((playerY+radius*2)/cellHeight);
+  playerCellXL = Math.floor((playerX-speed)/cellwidth);
+  playerCellYU = Math.floor((playerY-speed)/cellHeight);
+  playerCellXR = Math.floor((playerX+radius+radius+speed)/cellwidth);
+  playerCellYD = Math.floor((playerY+radius+radius+speed)/cellHeight);
   //
   //drawMetal();
   //
@@ -260,9 +260,15 @@ function drawPlayer() {
 
 function floorhitbox() {
   if (playerCellYD >= 0 && playerCellYD <= cols) {
-    if (playerCellXL >= 0 && playerCellXL <= rows || playerCellXR >= 0 && playerCellXR <= rows) {
-      if (grid[playerCellYD][playerCellXL] === 1 || grid[playerCellYD][playerCellXR] === 1) {
+    if (playerCellXL >= 0 && playerCellXL <= rows && playerCellXR >= 0 && playerCellXR <= rows) {
+      if (grid[playerCellYD][playerCellXL] === 1 || grid[playerCellYD][playerCellXR] === 1 || grid[playerCellYD][playerCellXL] === 2 || grid[playerCellYD][playerCellXR] === 2) {
         floorhit = true;
+        if (grid[playerCellYD][playerCellXL] === 0 || grid[playerCellYU][playerCellXL] === 0) {
+          leftwallhit = false;
+        }
+        if (grid[playerCellYD][playerCellXR] === 0 || grid[playerCellYU][playerCellXR] === 0) {
+          rightwallhit = false;
+        }
       }
       else {
         floorhit = false;
@@ -272,10 +278,13 @@ function floorhitbox() {
 }
 
 function leftwallhitbox() {
-  if (playerCellYD >= 0 && playerCellYD <= cols || playerCellYU >= 0 && playerCellYU <= cols) {
+  if (playerCellYD >= 0 && playerCellYD <= cols && playerCellYU >= 0 && playerCellYU <= cols) {
     if (playerCellXL >= 0 && playerCellXL <= rows) {
-      if (grid[playerCellYD][playerCellXL] === 1 || grid[playerCellYU][playerCellXL] === 1) {
+      if (grid[playerCellYD][playerCellXL] === 1 || grid[playerCellYU][playerCellXL] === 1 || grid[playerCellYD][playerCellXL] === 2 || grid[playerCellYU][playerCellXL] === 2) {
         leftwallhit = true;
+        if (grid[playerCellYD][playerCellXL] === 0 || grid[playerCellYD][playerCellXR] === 0) {
+          floorhit = false;
+        }
       }
       else {
         leftwallhit = false;
@@ -285,10 +294,13 @@ function leftwallhitbox() {
 }
 
 function rightwallhitbox() {
-  if (playerCellYD >= 0 && playerCellYD <= cols || playerCellYU >= 0 && playerCellYU <= cols) {
+  if (playerCellYD >= 0 && playerCellYD <= cols && playerCellYU >= 0 && playerCellYU <= cols) {
     if (playerCellXR >= 0 && playerCellXR <= rows) {
-      if (grid[playerCellYD][playerCellXR] === 1 || grid[playerCellYU][playerCellXR] === 1) {
+      if (grid[playerCellYD][playerCellXR] === 1 || grid[playerCellYU][playerCellXR] === 1 || grid[playerCellYD][playerCellXR] === 2 || grid[playerCellYU][playerCellXR] === 2) {
         rightwallhit = true;
+        if (grid[playerCellYD][playerCellXL] === 0 || grid[playerCellYD][playerCellXR] === 0) {
+          floorhit = false;
+        }
       }
       else {
         rightwallhit = false;
@@ -299,9 +311,15 @@ function rightwallhitbox() {
 
 function roofhitbox() {
   if (playerCellYU >= 0 && playerCellYU <= cols) {
-    if (playerCellXL >= 0 && playerCellXL <= rows || playerCellXR >= 0 && playerCellXR <= rows) {
-      if (grid[playerCellYU][playerCellXL] === 1 || grid[playerCellYU][playerCellXR] === 1) {
+    if (playerCellXL >= 0 && playerCellXL <= rows && playerCellXR >= 0 && playerCellXR <= rows) {
+      if (grid[playerCellYU][playerCellXL] === 1 || grid[playerCellYU][playerCellXR] === 1 || grid[playerCellYU][playerCellXL] === 2 || grid[playerCellYU][playerCellXR] === 2) {
         roofhit = true;
+        if (grid[playerCellYD][playerCellXL] === 0 || grid[playerCellYU][playerCellXL] === 0) {
+          leftwallhit = false;
+        }
+        if (grid[playerCellYD][playerCellXR] === 0 || grid[playerCellYU][playerCellXR] === 0) {
+          rightwallhit = false;
+        }
       }
       else {
         roofhit = false;
@@ -314,7 +332,6 @@ function handleKeys() { //allows movement
   if (keyIsDown(87)) {
   //w
     if (roofhit === false) {
-      if (playerY -= speed !== )
       playerY -= speed;
     }
   }
