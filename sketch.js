@@ -15,7 +15,7 @@ let dy = 1;
 let airtime = false;
 let flooring;
 let pushingLine;
-let startGame = true;
+let startGame = false;
 let levelEditor = false;
 let d;
 let pushSpeed = 5;
@@ -29,6 +29,11 @@ let playerCellYU;
 let playerCellXL;
 let playerCellYD;
 let playerCellXR;
+let newPlayerCellYU;
+let newPlayerCellXL;
+let newPlayerCellYD;
+let newPlayerCellXR;
+let gravPlayerCellYD;
 let idle1;
 let idle2;
 let idle3;
@@ -66,10 +71,16 @@ function draw() {
   //
   d = dist(width * 0.45 - 25, rectY + 5, playerX + radius, playerY + radius);
   //
-  playerCellXL = Math.floor((playerX-speed)/cellwidth);
-  playerCellYU = Math.floor((playerY-speed)/cellHeight);
-  playerCellXR = Math.floor((playerX+radius+radius+speed)/cellwidth);
-  playerCellYD = Math.floor((playerY+radius+radius+speed)/cellHeight);
+  playerCellXL = Math.floor(playerX/cellwidth);
+  playerCellYU = Math.floor(playerY/cellHeight);
+  playerCellXR = Math.floor((playerX+radius+radius)/cellwidth);
+  playerCellYD = Math.floor((playerY+radius+radius)/cellHeight);
+
+  newPlayerCellXL = Math.floor((playerX-speed)/cellwidth);
+  newPlayerCellYU = Math.floor((playerY-speed)/cellHeight);
+  newPlayerCellXR = Math.floor((playerX+radius+radius+speed)/cellwidth);
+  newPlayerCellYD = Math.floor((playerY+radius+radius+speed)/cellHeight);
+
   //
   //drawMetal();
   //
@@ -161,15 +172,9 @@ function displayGrid() {
   }
 }
 
-function gravity() { //checks whether the player is above the wall or not and if the player is it sets that to be the floor it
-  if (playerX + radius*2 < width* 0.45 || playerX > width* 0.45 + 50) {
-    flooring = rectY;
-  }
-  if (playerX + radius*2 - 1 > width* 0.45 && playerX + radius*2 < width* 0.45 + 50 || playerX > width* 0.45 && playerX < width* 0.45 + 50) {
-    flooring = rectY - 200;
-  }
-  if (playerY >= flooring - radius * 2) { //increases the velocity with the gravity (grav) until the player hits the floor
-    playerY = flooring - radius * 2 - 0.1;
+function gravity() {
+  if (floorhit === true) { //increases the velocity with the gravity (grav) until the player hits the floor
+    playerY = grid;// - radius * 2 - 0.1
     dy = 0;
     airtime = false;
   }
@@ -258,33 +263,11 @@ function drawPlayer() {
   }
 }
 
-function floorhitbox() {
-  if (playerCellYD >= 0 && playerCellYD <= cols) {
-    if (playerCellXL >= 0 && playerCellXL <= rows && playerCellXR >= 0 && playerCellXR <= rows) {
-      if (grid[playerCellYD][playerCellXL] === 1 || grid[playerCellYD][playerCellXR] === 1 || grid[playerCellYD][playerCellXL] === 2 || grid[playerCellYD][playerCellXR] === 2) {
-        floorhit = true;
-        if (grid[playerCellYD][playerCellXL] === 0 || grid[playerCellYU][playerCellXL] === 0) {
-          leftwallhit = false;
-        }
-        if (grid[playerCellYD][playerCellXR] === 0 || grid[playerCellYU][playerCellXR] === 0) {
-          rightwallhit = false;
-        }
-      }
-      else {
-        floorhit = false;
-      }
-    }
-  }
-}
-
 function leftwallhitbox() {
   if (playerCellYD >= 0 && playerCellYD <= cols && playerCellYU >= 0 && playerCellYU <= cols) {
     if (playerCellXL >= 0 && playerCellXL <= rows) {
       if (grid[playerCellYD][playerCellXL] === 1 || grid[playerCellYU][playerCellXL] === 1 || grid[playerCellYD][playerCellXL] === 2 || grid[playerCellYU][playerCellXL] === 2) {
         leftwallhit = true;
-        if (grid[playerCellYD][playerCellXL] === 0 || grid[playerCellYD][playerCellXR] === 0) {
-          floorhit = false;
-        }
       }
       else {
         leftwallhit = false;
@@ -298,9 +281,6 @@ function rightwallhitbox() {
     if (playerCellXR >= 0 && playerCellXR <= rows) {
       if (grid[playerCellYD][playerCellXR] === 1 || grid[playerCellYU][playerCellXR] === 1 || grid[playerCellYD][playerCellXR] === 2 || grid[playerCellYU][playerCellXR] === 2) {
         rightwallhit = true;
-        if (grid[playerCellYD][playerCellXL] === 0 || grid[playerCellYD][playerCellXR] === 0) {
-          floorhit = false;
-        }
       }
       else {
         rightwallhit = false;
@@ -314,15 +294,22 @@ function roofhitbox() {
     if (playerCellXL >= 0 && playerCellXL <= rows && playerCellXR >= 0 && playerCellXR <= rows) {
       if (grid[playerCellYU][playerCellXL] === 1 || grid[playerCellYU][playerCellXR] === 1 || grid[playerCellYU][playerCellXL] === 2 || grid[playerCellYU][playerCellXR] === 2) {
         roofhit = true;
-        if (grid[playerCellYD][playerCellXL] === 0 || grid[playerCellYU][playerCellXL] === 0) {
-          leftwallhit = false;
-        }
-        if (grid[playerCellYD][playerCellXR] === 0 || grid[playerCellYU][playerCellXR] === 0) {
-          rightwallhit = false;
-        }
       }
       else {
         roofhit = false;
+      }
+    }
+  }
+}
+
+function floorhitbox() {
+  if (playerCellYD >= 0 && playerCellYD <= cols) {
+    if (playerCellXL >= 0 && playerCellXL <= rows && playerCellXR >= 0 && playerCellXR <= rows) {
+      if (grid[playerCellYD][playerCellXL] === 1 || grid[playerCellYD][playerCellXR] === 1 || grid[playerCellYD][playerCellXL] === 2 || grid[playerCellYD][playerCellXR] === 2) {
+        floorhit = true;
+      }
+      else {
+        floorhit = false;
       }
     }
   }
@@ -332,21 +319,27 @@ function handleKeys() { //allows movement
   if (keyIsDown(87)) {
   //w
     if (roofhit === false) {
-      playerY -= speed;
+      if (grid[newPlayerCellYU][playerCellXL] === 0 && grid[newPlayerCellYU][playerCellXR] === 0) {
+        playerY -= speed;
+      }
     }
   }
 
   if (keyIsDown(83)) {
   //s
     if (floorhit === false) {
-      playerY += speed;
+      if (grid[newPlayerCellYD][playerCellXL] === 0 && grid[newPlayerCellYD][playerCellXR] === 0) {
+        playerY += speed;
+      }
     }
   }
   if (keyIsDown(65)) {
     //a
     if (playerX > 0) {
       if (leftwallhit === false) {
-        playerX -= speed;
+        if (grid[playerCellYU][newPlayerCellXL] === 0 && grid[playerCellYD][newPlayerCellXL] === 0) {
+          playerX -= speed;
+        }
       }
     }
   }
@@ -354,7 +347,9 @@ function handleKeys() { //allows movement
     //d
     if (playerX + radius*2 < width) {
       if (rightwallhit === false) {
-        playerX += speed;
+        if (grid[playerCellYU][newPlayerCellXR] === 0 && grid[playerCellYD][newPlayerCellXR] === 0) {
+          playerX += speed;
+        }
       }
     }
   }
