@@ -15,7 +15,7 @@ let dy = 1;
 let airtime = false;
 let flooring;
 let pushingLine;
-let startGame = false;
+let startGame = true;
 let levelEditor = false;
 let d;
 let pushSpeed = 5;
@@ -33,7 +33,7 @@ let newPlayerCellYU;
 let newPlayerCellXL;
 let newPlayerCellYD;
 let newPlayerCellXR;
-let gravPlayerCellYD;
+let jumpPlayerCellYU;
 let idle1;
 let idle2;
 let idle3;
@@ -80,7 +80,6 @@ function draw() {
   newPlayerCellYU = Math.floor((playerY-speed)/cellHeight);
   newPlayerCellXR = Math.floor((playerX+radius+radius+speed)/cellwidth);
   newPlayerCellYD = Math.floor((playerY+radius+radius+speed)/cellHeight);
-
   //
   //drawMetal();
   //
@@ -96,9 +95,9 @@ function draw() {
   //
   rightwallhitbox();
   //
-  //gravity();
+  gravity();
   //
-  //createPushingLine();
+  createPushingLine();
   //
   editor();
   //
@@ -153,6 +152,7 @@ function displayGrid() {
           fill(255);
           stroke(255);
           rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
+          metalBlockCenter = 
         }
         else if (grid[y][x] === 3) {//starting point
           playerX = x*cellwidth;
@@ -174,13 +174,13 @@ function displayGrid() {
 
 function gravity() {
   if (floorhit === true) { //increases the velocity with the gravity (grav) until the player hits the floor
-    playerY = grid;// - radius * 2 - 0.1
+    playerY -= dy;
     dy = 0;
     airtime = false;
   }
   else {
     playerY += dy;
-    dy += grav;   
+    dy += grav;
   }
 }
 
