@@ -3,7 +3,6 @@
 // October 19, 2021
 
 let player;
-let metal;
 let playerX;
 let playerY;
 let rectY;
@@ -15,7 +14,7 @@ let dy = 1;
 let airtime = false;
 let flooring;
 let pushingLine;
-let startGame = true;
+let startGame = false;
 let levelEditor = false;
 let d;
 let pushSpeed = 5;
@@ -39,6 +38,7 @@ let idle2;
 let idle3;
 let idletime = 5000;
 let isIdle = false;
+let tutorialLevel = false;
 
 function preload() {
   player = loadImage("assets/Old hero1.png"); //load player image
@@ -81,7 +81,6 @@ function draw() {
   newPlayerCellXR = Math.floor((playerX+radius+radius+speed)/cellwidth);
   newPlayerCellYD = Math.floor((playerY+radius+radius+speed)/cellHeight);
   //
-  //drawMetal();
   //
   handleKeys(); //player movement
   //
@@ -97,12 +96,9 @@ function draw() {
   //
   gravity();
   //
-  createPushingLine();
+  //createPushingLine();
   //
   editor();
-  //
-  //console.log(playerCellY,playerCellX, grid[playerCellY][playerCellX]);
-  //console.log(playerY, playerX);
   //
   if (mouseIsPressed === true) {
     if (mouseButton === LEFT) {
@@ -152,7 +148,6 @@ function displayGrid() {
           fill(255);
           stroke(255);
           rect(x*cellwidth, y*cellHeight, cellwidth, cellHeight);
-          metalBlockCenter = 
         }
         else if (grid[y][x] === 3) {//starting point
           playerX = x*cellwidth;
@@ -189,6 +184,11 @@ function editor() {
     window.location = "https://sebatollah.github.io/gridbased-game/";
   }
 }
+function tutorial() {
+  if (tutorialLevel === true) {
+    window.location = "https://sebatollah.github.io/interactive-scene/";
+  }
+}
 
 function makeStartingScreen() {
   if (startGame === false) {
@@ -212,6 +212,13 @@ function makeStartingScreen() {
       textSize(40);
       fill("black");
       text("LEVEL EDITOR", width/2 - 150, height*0.75 + 30, 500, 130);
+
+      fill("darkgrey");
+      rect(width/2 - 550, height/2 - 10, 250, 130);// tutorial level button
+
+      textSize(40);
+      fill("black");
+      text("TUTORIAL", width/2 - 520, height/2 + 35, 250, 130);
     }
   }
 }
@@ -238,6 +245,15 @@ function mouseClicked() {
     if (startGame === false) {
       if (mouseX >= width/2 - 250 && mouseX <= width/2 + 250) {
         if (mouseY >= height*0.75 - 10 && mouseY <= height*0.75 + 120) {
+          levelEditor = true;
+        }
+      }
+    }
+  }
+  if (tutorialLevel === false) {
+    if (startGame === false) {
+      if (mouseX >= width/2 - 550 && mouseX <= width/2 - 420) {
+        if (mouseY >= height/2 - 10 && mouseY <= height/2 +240) {
           levelEditor = true;
         }
       }
@@ -316,23 +332,24 @@ function floorhitbox() {
 }
 
 function handleKeys() { //allows movement
-  if (keyIsDown(87)) {
-  //w
-    if (roofhit === false) {
-      if (grid[newPlayerCellYU][playerCellXL] === 0 && grid[newPlayerCellYU][playerCellXR] === 0) {
-        playerY -= speed;
-      }
-    }
-  }
+  // if (keyIsDown(87)) {
+  // //w
+  //   if (roofhit === false) {
+  //     if (grid[newPlayerCellYU][playerCellXL] === 0 && grid[newPlayerCellYU][playerCellXR] === 0) {
+  //       playerY -= speed;
+  //     }
+  //   }
+  // }
 
-  if (keyIsDown(83)) {
-  //s
-    if (floorhit === false) {
-      if (grid[newPlayerCellYD][playerCellXL] === 0 && grid[newPlayerCellYD][playerCellXR] === 0) {
-        playerY += speed;
-      }
-    }
-  }
+  // if (keyIsDown(83)) {
+  // //s
+  //   if (floorhit === false) {
+  //     if (grid[newPlayerCellYD][playerCellXL] === 0 && grid[newPlayerCellYD][playerCellXR] === 0) {
+  //       playerY += speed;
+  //     }
+  //   }
+  // } comment out all this to move up and down by a little bit
+
   if (keyIsDown(65)) {
     //a
     if (playerX > 0) {
