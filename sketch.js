@@ -1,6 +1,7 @@
 // Major Project
 // Seb
 // October 19, 2021
+// The ideas for this project come from Brandon Sanderson's Mistborn books
 
 let player;
 let playerX;
@@ -200,7 +201,7 @@ function makeStartingScreen() {
   
       textSize(80);
       fill("blue");
-      text("SEBASTIAN'S PROJECT GAME", width/2 - 600, height*0.3, 1250, 1000);//title
+      text("SEBASTIAN'S MISTBORN GAME", width/2 - 600, height*0.3, 1250, 1000);//title
       
       textSize(40);
       fill("black");
@@ -254,7 +255,7 @@ function mouseClicked() {
     if (startGame === false) {
       if (mouseX >= width/2 - 550 && mouseX <= width/2 - 420) {
         if (mouseY >= height/2 - 10 && mouseY <= height/2 +240) {
-          levelEditor = true;
+          tutorialLevel = true;
         }
       }
     }
