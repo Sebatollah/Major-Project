@@ -101,6 +101,8 @@ function draw() {
   //
   editor();
   //
+  tutorial();
+  //
   if (mouseIsPressed === true) {
     if (mouseButton === LEFT) {
       if (mouseX >= width * 0.45 - 50 && mouseX <= width * 0.45) {
